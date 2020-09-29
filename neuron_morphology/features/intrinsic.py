@@ -1,5 +1,6 @@
 from typing import Optional, List
 from functools import partial
+import numpy as np
 
 from neuron_morphology.feature_extractor.data import Data
 from neuron_morphology.features.statistics.coordinates import COORD_TYPE
@@ -177,7 +178,10 @@ def calculate_mean_fragmentation_from_root(morphology,
                                        start_id=morphology.node_id_cb(root),
                                        neighbor_cb=neighbor_cb)
 
-    mean_fragmentation = counter['num_compartments'] / counter['num_branches']
+    if counter['num_branches'] == 0:
+        mean_fragmentation = np.NaN
+    else:
+        mean_fragmentation = counter['num_compartments'] / counter['num_branches']
     return (mean_fragmentation,
             counter['num_branches'],
             counter['num_compartments'])
@@ -211,7 +215,10 @@ def mean_fragmentation(
         num_branches += local_branches
         num_compartments += local_compartments
 
-    mean_fragmentation = num_compartments / num_branches
+    if num_branches == 0:
+        mean_fragmentation = np.NaN
+    else:
+        mean_fragmentation = num_compartments / num_branches
     return mean_fragmentation
 
 
